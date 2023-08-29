@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@700&display=swap');
+@font-face {
+	font-family: irsRegular;
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/woff/IRANSansXFaNum-Regular.woff') format('woff'),   
+	url('../fonts/woff2/IRANSansXFaNum-Regular.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: irsMedium;
+	font-style: normal;
+	font-weight: 500;
+	src: url('../fonts/woff/IRANSansXFaNum-Medium.woff') format('woff'),   
+	url('../fonts/woff2/IRANSansXFaNum-Medium.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: irsBold;
+	font-style: normal;
+	font-weight: bold;
+	src: url('../fonts/woff/IRANSansXFaNum-Bold.woff') format('woff'),   
+	url('../fonts/woff2/IRANSansXFaNum-Bold.woff2') format('woff2');	 
+}
+
+@font-face {
+	font-family: irsBlack;
+	font-style: normal;
+	font-weight: 900;
+	src: url('../fonts/woff/IRANSansXFaNum-Black.woff') format('woff'),   
+	url('../fonts/woff2/IRANSansXFaNum-Black.woff2') format('woff2');	 
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'irsMedium','Prompt', sans-serif;
+}
+
+@media only screen and (min-width: 600px) {
+	.Vue-Toastification__container.top-right .Vue-Toastification__toast--rtl,
+	.Vue-Toastification__container.bottom-right .Vue-Toastification__toast--rtl {
+	  margin-right: auto !important;
+	  margin-left: auto !important;
+	  font-family: "irsMedium", sans-serif !important;
+	}
+}
