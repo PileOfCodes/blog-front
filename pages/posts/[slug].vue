@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="relative">
         <div class="pl-8 pr-12 mt-20" :style="[locale == 'fa' ? 'direction: rtl' : 'direction: ltr']">
             <div class="flex gap-x-4">
                 <div class="h-full w-full border-b-2 pb-8">
@@ -52,7 +52,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-orange-400 h-full w-[400px]">Lorem, ipsum.</div>
+                <div class="relative w-[300px]">
+                    <div class="sticky top-[100px] mt-[1020px]">
+                        <div class="font-bold text-center dark:text-white text-2xl">{{ $t('related articles') }}</div>
+                        <div v-if="relatedArticles.length == 0" class="text-slate-800 dark:text-white p-2 text-center ">
+                            {{ locale == 'fa' ? ' مقاله مرتبطی وجود ندارد! ' : 'There is no related article!' }}
+                        </div>
+                        <div v-else>
+                            <RelatedArticles @send-articles="(data) => relatedArticles = data" />
+                        </div>
+                        <NuxtLink v-if="relatedArticles.length > 4 " :to="localePath('/categories')" :class="btnStyle">
+                            {{ $t('all categories') }}
+                        </NuxtLink>
+                    </div>
+                </div>
             </div>
             <div class="mt-12 w-3/5">
                 <div class="mb-12 dark:text-white text-xl font-bold ">{{ locale == 'fa' ? 'پاسخ ها' : 'comments' }}</div>
@@ -78,6 +91,7 @@
 <script setup>
 import {useLikeStore} from '~/store/like'
 import {useToast} from 'vue-toastification'
+const btnStyle = ref('py-2 rounded-sm border-2 border-slate-800 dark:border-white hover:bg-slate-800 hover:text-white hover:dark:bg-white hover:dark:text-slate-800 dark:text-white mt-8 flex text-lg items-center justify-center lg:justify-center transition-all duration-300 font-bold')
 const {locale} = useI18n()
 const {public : {apiBase}} = useRuntimeConfig()
 const route = useRoute()
@@ -88,6 +102,7 @@ const commentTextarea = ref('')
 const likePost = useLikeStore()
 const localePath = useLocalePath()
 const {authUser} = useAuth()
+const relatedArticles = ref([])
 
 const isLiked = computed(() => likePost.getItem(authUser.value.id, route.params.slug))
 const articleLikes = computed(() => likePost.articleLikes(route.params.slug))

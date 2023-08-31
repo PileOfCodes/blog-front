@@ -35,12 +35,14 @@
                 <Icon @click="showReplies = ! showReplies" class="cursor-pointer" size="27" name="uil:comment" />
                 <span :style="[locale == 'fa' ? 'font-family: IrsMedium' : 'font-family: sans-serif']">{{ props.comment.replies.length }} {{ $t('answer') }}</span>
             </div>
-            <div class="tooltip flex items-center gap-x-1" :data-tip="locale == 'fa' ? 'مورد پسند' : 'Favorite'">
-                <Icon class="cursor-pointer" @click="likeComment" size="28" name="solar:heart-bold" />
-                <span :style="[locale == 'fa' ? 'font-family: IrsMedium' : 'font-family: sans-serif']">24</span>
-            </div>
+            <ClientOnly>
+                <div class="tooltip flex items-center gap-x-1" :data-tip="locale == 'fa' ? 'مورد پسند' : 'Favorite'">
+                    <Icon :class="{'text-red-600' : isCommentLiked}" class="cursor-pointer" @click="likeComment(props.comment.id)" size="28" name="solar:heart-bold" />
+                    <span :style="[locale == 'fa' ? 'font-family: IrsMedium' : 'font-family: sans-serif']">{{ commentLikes }}</span>
+                </div>
+            </ClientOnly>
         </div>
-        <div v-if="showReplies" class="animateReplySection" :class="showReplies ? 'my-4 mr-2 shadow-sm shadow-slate-600' : ''">
+        <div v-if="showReplies" :class="showReplies ? 'animateReplySection my-4 mr-2 shadow-sm shadow-slate-600' : ''">
             <PostComment v-for="reply in props.comment.replies" :key="reply.id" :comment="reply" />
         </div>
     </div>
@@ -54,24 +56,36 @@
             </div>
         </div>
     </div>
+    <div v-if="commentLikePending">
+            <div class="fixed z-[1000] top-0 left-0 bottom-0 w-full h-full bg-black flex items-center justify-center ">
+                <span class="loading loading-infinity loading-big-spinner text-success"></span>
+            </div>
+        </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {useToast} from 'vue-toastification'
+import {useLikeStore} from '~/store/like'
+const likeUserComment = useLikeStore()
 const toast = useToast()
-const {locale} : any = useI18n()
+const {locale} = useI18n()
 const localePath = useLocalePath()
-const {authUser} : any = useAuth()
+const {authUser} = useAuth()
 const props = defineProps(['comment'])
 const pending = ref(false)
 const {public : {apiBase}} = useRuntimeConfig()
 const showCommentSection = ref(false)
-const userReplyComment = ref<string>('')
+const userReplyComment = ref('')
 const disBtn = ref(true)
 const showReplies = ref(false)
 const route = useRoute()
+const commentLikePending = ref(false)
 
-const {data: post} : any = await useFetch(`${apiBase}/posts/getPost`, {
+
+const isCommentLiked = computed(() => likeUserComment.isCommentLiked(authUser.value.id, props.comment.id))
+const commentLikes = computed(() => likeUserComment.commentLikes(props.comment.id))
+
+const {data: post} = await useFetch(`${apiBase}/posts/getPost`, {
     params: {slug: route.params.slug}
 })
 
@@ -83,9 +97,20 @@ watch(userReplyComment, (newVal) => {
     }
 })
 
-function likeComment() {
+async function likeComment(commentId) {
     if(authUser.value) {
-        console.log('liked');
+        try {
+            commentLikePending.value = true
+            const data = await $fetch('/api/comment/like/update', {
+                method: 'POST',
+                body: {comment_id: commentId}
+            })
+            likeUserComment.getCommentLike(data)
+        } catch (error) {
+            
+        }finally {
+            commentLikePending.value = false
+        }
     }else {
         locale.value == 'fa' ? toast.info('برای پسند کردن ابتدا باید وارد وبلاگ شوید') : toast.info('you need to first login into weblog')
         setTimeout(() => {
@@ -95,7 +120,6 @@ function likeComment() {
 }
 
 async function sendReplyComment() {
-    
     pending.value = true
     try {
         await $fetch('/api/comment/create', {

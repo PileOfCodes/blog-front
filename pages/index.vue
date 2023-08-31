@@ -9,7 +9,7 @@
             </div>
             <div class="lg:w-[1140px] lg:shadow-lg lg:rounded-lg ">
                 <div :style="locale == 'fa' ? 'direction: rtl' : 'direction: ltr'" :class="[locale == 'fa' ? 'lg:text-right' : 'lg:text-left']" class="text-slate-800 lg:px-3 dark:text-white text-2xl text-center mt-8 font-bold md:mb-6 lg:mt-0">{{ $t('articles') }}</div>
-                <!-- <LandingPosts /> -->
+                <LandingPosts />
             </div>
         </div>
     </div>
