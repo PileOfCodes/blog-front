@@ -1,7 +1,7 @@
 <template>
     <div>
         <FilterSection @send-search-item="(input) => searchItem = input" />
-        <div class="mt-20 px-8 flex items-center justify-center xl:justify-between xl:gap-y-10 gap-12 flex-wrap">
+        <div class="mt-20 px-8 flex items-center justify-center xl:justify-between xl:gap-y-10 gap-12 flex-wrap min-h-[180px]">
             <div v-for="post in posts" :key="post.id" class="group">
                 <NuxtLink :to="localePath(`/posts/${post.slug}`)" class="relative" :style="[locale == 'fa' ? 'font-family: irsMedium' : 'font-family: sans-serif']">
                     <div class="flex items-center justify-between text-slate-800 dark:text-white xl:text-sm font-bold xl:mt-2 transition-all duration-300">
@@ -29,6 +29,7 @@
                 </NuxtLink>
             </div>
         </div>
+        <div v-if="notFound" class="text-slate-800 dark:text-white font-bold text-2xl text-center ">{{ locale == 'fa' ? ' موردی یافت نشد ' : 'Not found anything' }}</div>
         <ObserveArticles v-if="enableObserver"  @intersect="getPosts" />
         <div class="flex items-center justify-center mt-8">
             <span v-if="pending" class="loading loading-dots loading-lg dark:text-white"></span>
@@ -37,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { debounce } from 'lodash';
 const localePath = useLocalePath()
 const searchItem = ref('')
@@ -47,26 +49,31 @@ const posts = ref<any>([])
 const lastPage = ref(1)
 const currentPage = ref(1)
 const pending = ref(false)
+const notFound = ref(false)
 const enableObserver = ref(true)
+
 const getPosts = async() => {
-    const {data} : any = await useFetch(`${apiBase}/getPosts`, {
-        query: {page: page.value}
-    })
-    currentPage.value = data.value.data.meta.current_page
-    lastPage.value = data.value.data.meta.last_page
-    page.value = currentPage.value
-    if(page.value <= lastPage.value) {
-        setTimeout(() => {
-            pending.value = true
-        });
-        if(page.value === 1) {
-            posts.value = [...data.value.data.posts]
-        }else {
-            posts.value = [...posts.value, ...data.value.data.posts]
+    try {
+        pending.value = true
+        const {data} : any = await useFetch(`${apiBase}/getPosts`, {
+            query: {page: page.value}
+        })
+        currentPage.value = data.value.data.meta.current_page
+        lastPage.value = data.value.data.meta.last_page
+        page.value = currentPage.value
+        if(page.value <= lastPage.value) {
+            if(page.value === 1) {
+                posts.value = [...data.value.data.posts]
+            }else {
+                posts.value = [...posts.value, ...data.value.data.posts]
+            }
+            page.value++
         }
-        page.value++
+    } catch (error) {
+        
+    }finally {
+        pending.value = false
     }
-    pending.value = false
 }
 
 const getSearchedPosts = async() => {
@@ -74,10 +81,16 @@ const getSearchedPosts = async() => {
         query: {search: searchItem.value}
     })
     posts.value = data.value.data.posts
+    if (posts.value.length == 0) {
+        notFound.value = true
+    }else {
+        notFound.value = false
+    }
 }
 
 watch(searchItem, debounce(() => {    
     if(searchItem.value == '') {
+        notFound.value = false
         enableObserver.value = true
         page.value = 1
         getPosts()
@@ -85,6 +98,6 @@ watch(searchItem, debounce(() => {
         enableObserver.value = false
         getSearchedPosts()
     }
-}, 1000))
+}, 700))
 
 </script>

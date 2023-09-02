@@ -7,12 +7,9 @@
                     <DarkModeSwitch v-model="modelValue" />
                     <LanguageSwitch />
                 </div>
-                <HamburgerMenu class="sm:hidden" :closeMenu="closeMenu" @toggle-menu="(value: boolean) => closeMenu = value" />
+                <HamburgerMenu class="sm:hidden" :closeMenu="closeMenu" @toggle-menu="(value) => closeMenu = value" />
             </div>
             <div style="direction: rtl;" :class="[closeMenu ? 'flex flex-col visible' : 'hidden']" class="text-slate-800 dark:text-white sm:flex items-center gap-y-4 font-bold sm:flex-row sm:items-center sm:gap-x-4 md:gap-x-4">
-                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/')">{{ $t('blog') }}</NuxtLink>
-                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/posts')">{{ $t('articles') }}</NuxtLink>
-                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/categories')">{{ $t('categories') }}</NuxtLink>
                 <div v-if="authUser" class="flex items-center">
                     <div class="dropdown dropdown-hover">
                     <img :src="authUser.image || '/thumbs.png'" tabindex="0" class="w-12 h-12 rounded-full">
@@ -26,19 +23,23 @@
                     <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/auth/login')">{{ $t('login') }}</NuxtLink>
                     <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/auth/register')">{{ $t('register') }}</NuxtLink>
                 </div>
+                <span class="hidden sm:block text-gray-200 border-r-[3px] opacity-[.7] h-10  "></span>
+                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/')">{{ $t('blog') }}</NuxtLink>
+                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/posts')">{{ $t('articles') }}</NuxtLink>
+                <NuxtLink class="hover:dark:bg-slate-700 hover:bg-gray-200 rounded-sm transition-all duration-75 px-4 py-2" active-class="tw-active" :to="localePath('/categories')">{{ $t('categories') }}</NuxtLink>
             </div>
         </div>
         <HeaderSecondList />
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {useToast} from 'vue-toastification'
 const colorMode = useColorMode()
 const localePath = useLocalePath()
 const closeMenu = ref(false)
 const modelValue = ref(true)
-const {authUser} : any  = useAuth();
+const {authUser}  = useAuth();
 const toast = useToast()
 
 

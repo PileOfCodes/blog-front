@@ -29,5 +29,8 @@
     "logout" : "خروج",
     "profile" : "پروفایل",
     "answer" : " پاسخ ",
-    "related articles" : " مقالات مرتبط "
+    "related articles" : " مقالات مرتبط ",
+    "yes" : "بله",
+    "no" : "خیر",
+    "update" : " بروز رسانی "
 }

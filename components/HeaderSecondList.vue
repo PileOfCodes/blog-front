@@ -1,5 +1,5 @@
 <template>
-    <div id="headerSecondList" class="sticky top-0 h-[50px] bg-white dark:bg-slate-800 animateHeaderSecondList flex items-center gap-x-12 py-2 px-4 md:px-8 dark:text-white shadow-md">
+    <div id="headerSecondList" class="bg-white dark:bg-slate-800 animateHeaderSecondList flex items-center gap-x-12 py-2 px-4 md:px-8 dark:text-white shadow-md">
         <div class="text-2xl font-bold">
             <NuxtLink :to="localePath('/')">PileOFCodes</NuxtLink>
         </div>

@@ -34,33 +34,41 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const {locale} = useI18n()
 const localePath = useLocalePath()
 const newestPostImageStyle = ref('animatedPostImage w-full hover:opacity-10 object-cover rounded-sm w-[460px] h-[300px] sm:w-[600px] sm:h-[400px] md:w-full xl:w-[555px] group-hover:scale-[120%] group-hover:transition-all group-hover:duration-500 group-hover:ease-in-out transition-all duration-500')
 const {public: {apiBase}} = useRuntimeConfig()
-const posts = ref<any>([])
-const page = ref<any>(1)
-const lastPage = ref<number>(1)
+const posts = ref([])
+const page = ref(1)
+const lastPage = ref(1)
 const pending = ref(false)
 
 
 const loadPosts = async() => {
-    let {data} : any = await useFetch(`${apiBase}/getPosts`, {
-        query: {page: page.value}
-    })
-    posts.value.push(data.value.data.posts)
-    lastPage.value = data.value.data.meta.last_page
+    pending.value = true
+    try {
+        let {data} = await useFetch(`${apiBase}/getPosts`, {
+            query: {page: page.value}
+        })
+        posts.value.push(data.value.data.posts)
+        lastPage.value = data.value.data.meta.last_page
+        
+    } catch (error) {
+        
+    }finally {
+        pending.value = false
+    }
 }
 
 const loadMore = () => {
     if(page.value < lastPage.value) {
-        pending.value = true
+        // pending.value = true
         page.value = page.value + 1
-        setTimeout(() => {
-            loadPosts()
-            pending.value = false
-        }, 2000)        
+        loadPosts()
+        // setTimeout(() => {
+        //     pending.value = false
+        // }, 2000)        
     } 
 }
 loadPosts()

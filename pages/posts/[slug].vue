@@ -3,9 +3,9 @@
         <div class="pl-8 pr-12 mt-20" :style="[locale == 'fa' ? 'direction: rtl' : 'direction: ltr']">
             <div class="flex gap-x-4">
                 <div class="h-full w-full border-b-2 pb-8">
-                    <div class="">
+                    <div>
                         <div class="flex gap-x-2">
-                            <NuxtLink to="/profile/asdf" class="w-20 h-20 rounded-full overflow-hidden">
+                            <NuxtLink :to="localePath(`/profile/${post.data.userName}`)" class="w-20 h-20 rounded-full overflow-hidden">
                                 <UnLazyImage 
                                 class="w-20 h-20 hover:scale-[115%] object-cover rounded-full duration-500 transition-all"
                                 :src="post.data.userImage" 
@@ -52,14 +52,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative w-[300px]">
-                    <div class="sticky top-[100px] mt-[1020px]">
+                <div class="relative flex flex-col justify-center w-[300px] ">
+                    <div class="sticky top-[100px] ">
                         <div class="font-bold text-center dark:text-white text-2xl">{{ $t('related articles') }}</div>
+                        <div>
+                            <RelatedArticles @send-articles="(data) => relatedArticles = data" />
+                        </div>
                         <div v-if="relatedArticles.length == 0" class="text-slate-800 dark:text-white p-2 text-center ">
                             {{ locale == 'fa' ? ' مقاله مرتبطی وجود ندارد! ' : 'There is no related article!' }}
-                        </div>
-                        <div v-else>
-                            <RelatedArticles @send-articles="(data) => relatedArticles = data" />
                         </div>
                         <NuxtLink v-if="relatedArticles.length > 4 " :to="localePath('/categories')" :class="btnStyle">
                             {{ $t('all categories') }}
