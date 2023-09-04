@@ -14,7 +14,7 @@
                     <div class="dropdown dropdown-hover">
                     <img :src="authUser.image || '/thumbs.png'" tabindex="0" class="w-12 h-12 rounded-full">
                         <ul tabindex="0" class="dropdown-content dark:text-slate-800 z-[1] menu p-2 shadow bg-base-100 rounded-sm w-52">
-                            <li><NuxtLink to="#">{{ $t('profile') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath(`/profile/@${authUser.name}`)">{{ $t('profile') }}</NuxtLink></li>
                             <li><span @click="logout">{{ $t('logout') }}</span></li>
                         </ul>
                     </div>

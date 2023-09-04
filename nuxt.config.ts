@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     "nuxt-lodash",
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt'
+    '@pinia-plugin-persistedstate/nuxt',
+    'nuxt-swiper'
   ],
   build: {
     transpile: ['vue-toastification']

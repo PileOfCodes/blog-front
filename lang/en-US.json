@@ -31,5 +31,10 @@
     "profile" : "Profile",
     "answer" : "answer",
     "related articles" : "Related Articles",
-    "update" : "update"
+    "update" : "update",
+    "save" : "save",
+    "name" : "username",
+    "email" : " email ",
+    "password" : " password  "
+
 }

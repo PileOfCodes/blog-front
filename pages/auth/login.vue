@@ -19,6 +19,9 @@
 
 <script setup lang="ts">
 import {useToast} from 'vue-toastification'
+definePageMeta({
+    middleware: ['guest']
+})
 const localePath  = useLocalePath()
 const {locale} = useI18n()
 const toast = useToast()
