@@ -1,25 +1,25 @@
 <template>
-    <div>
-
+    <div class="min-h-[300px] my-20">
+      <div class=" text-slate-800 dark:text-white text-center mb-20 text-4xl font-bold">{{ $t('category') }}: {{ locale == 'fa' ? category.persianTitle : category.englishTitle }}</div>
         <ClientOnly>
             <Swiper
-            class="swiper-cards"
-            :width="240"
+            class="swiper-cards w-[420px] sm:w-[580px] sm:h-[50vh] md:h-[60vh] md:w-[720px]"
             :modules="[SwiperAutoplay, SwiperEffectCards]"
             :slides-per-view="1"
             :loop="true"
             :effect="'cards'"
             :autoplay="{
-                delay: 8000,
+                delay: 3000,
                 disableOnInteraction: true
             }"
             >
             <SwiperSlide
-                v-for="(slide, idx) in slides"
-                :key="idx"
-                :style="`background-color: ${slide.bg}; color: ${slide.color}`"
+                v-for="article in articles"
+                :key="article.id"
             >
-                {{ idx }}
+            <NuxtLink :to="`/posts/${article.slug}`" class="w-full h-full">
+              <img :src="article.image" class="sm:h-[50vh] md:h-[60vh] w-full" :alt="article.id">
+            </NuxtLink>
             </SwiperSlide>
             </Swiper>
         </ClientOnly>
@@ -27,15 +27,16 @@
 </template>
 
 <script setup>
-const slides = ref(Array.from({ length: 10 }, () => {
-  const r = Math.floor(Math.random() * 256)
-  const g = Math.floor(Math.random() * 256)
-  const b = Math.floor(Math.random() * 256)
-  // Figure out contrast color for font
-  const contrast = r * 0.299 + g * 0.587 + b * 0.114 > 186 ? 'black' : 'white'
+const {locale} = useI18n()
+const route = useRoute()
+const {public : {apiBase}} = useRuntimeConfig()
+const {data: articles} = await $fetch(`${apiBase}/category/getArticles`, {
+  params: {slug: route.params.slug}
+})
+const {data: category} = await $fetch(`${apiBase}/category/getCategory`, {
+  params: {slug: route.params.slug}
+})
 
-  return { bg: `rgb(${r}, ${g}, ${b})`, color: contrast }
-}))
 </script>
 
 <style>
@@ -44,7 +45,6 @@ const slides = ref(Array.from({ length: 10 }, () => {
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  height: 20vh;
   font-size: 4rem;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
@@ -52,10 +52,6 @@ const slides = ref(Array.from({ length: 10 }, () => {
 .swiper-wrapper {
   min-width: 100vh;
   width: 100vh;
-}
-.swiper-cards {
-  width: 240px;
-  height: 240px;
 }
 .swiper-cards .swiper-slide {
   border-radius: 6px;

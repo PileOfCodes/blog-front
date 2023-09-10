@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
-        <div class="pl-8 pr-12 mt-20" :style="[locale == 'fa' ? 'direction: rtl' : 'direction: ltr']">
-            <div class="flex gap-x-4">
+        <div class="px-2 sm:px-6 lg:pl-8 lg:pr-12 mt-20" :style="[locale == 'fa' ? 'direction: rtl' : 'direction: ltr']">
+            <div class="flex flex-col lg:flex lg:flex-row lg:gap-x-4">
                 <div class="h-full w-full border-b-2 pb-8">
                     <div>
                         <div class="flex gap-x-2">
@@ -14,12 +14,12 @@
                                 />
                             </NuxtLink>
                             <div>
-                                <div class="dark:text-white">{{ post.data.userName }}</div>
-                                <div class="dark:text-gray-400 mt-2">{{ locale == 'fa' ? post.data.persianDate : post.data.englishDate }}</div>
+                                <div class="dark:text-white font-bold">{{ post.data.userName }}</div>
+                                <div class="dark:text-gray-400 text-sm mt-2">{{ locale == 'fa' ? post.data.persianDate : post.data.englishDate }}</div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between">
-                            <div class="dark:text-white mt-12 mb-8 text-2xl font-bold">{{ locale == 'fa' ? post.data.persianTitle : post.data.englishTitle }}</div>
+                            <div class="dark:text-white text-lg mr-2 md:mr-0 mt-12 mb-8 md:text-2xl font-bold">{{ locale == 'fa' ? post.data.persianTitle : post.data.englishTitle }}</div>
                             <ClientOnly>
                                 <div style="direction: ltr;" class="flex items-center gap-x-4 px-4 rounded-full py-2 font-bold dark:bg-white dark:text-slate-800">
                                     <div @click="likeArticle" class="tooltip" :data-tip="locale == 'fa' ? 'مورد پسند' : 'Favorite'">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="flex flex-col items-center justify-center">
                         <UnLazyImage 
-                        class="xl:w-full xl:h-full sm:w-[540px] md:w-[480px] lg:w-[520px] w-[500px] h-[300px] duration-500 transition-all"
+                        class="xl:w-full h-full sm:w-[580px] md:w-[780px]  w-[500px] duration-500 transition-all"
                         :src="post.data.image" 
                         blurhash="LEHV6nWB2yk8pyo0adR*.7kCMdnj" 
                         auto-sizes 
@@ -47,13 +47,13 @@
                     </div>
                     <div class="dark:text-white mt-12 text-justify leading-10">{{ locale == 'fa' ? post.data.persianBody : post.data.englishBody }}</div>
                     <div class="flex gap-x-4 mt-8 ">
-                        <div v-for="category in post.data.categories" :key="category.id">
-                            <span class="dark:text-slate-800 dark:bg-white py-2 px-3 ">{{ category.englishTitle }}</span>
-                        </div>
+                        <NuxtLink :to="`/categories/${category.slug}`" v-for="category in post.data.categories" :key="category.id">
+                            <span class="bg-slate-800 text-white dark:text-slate-800 dark:bg-white py-2 px-3 ">{{ category.englishTitle }}</span>
+                        </NuxtLink>
                     </div>
                 </div>
-                <div class="relative flex flex-col justify-center w-[300px] ">
-                    <div class="sticky top-[100px] ">
+                <div class="relative flex flex-col justify-center md:w-[300px] mt-[50px]">
+                    <div class="md:sticky md:top-[100px] ">
                         <div class="font-bold text-center dark:text-white text-2xl">{{ $t('related articles') }}</div>
                         <div>
                             <RelatedArticles @send-articles="(data) => relatedArticles = data" />
@@ -61,13 +61,13 @@
                         <div v-if="relatedArticles.length == 0" class="text-slate-800 dark:text-white p-2 text-center ">
                             {{ locale == 'fa' ? ' مقاله مرتبطی وجود ندارد! ' : 'There is no related article!' }}
                         </div>
-                        <NuxtLink v-if="relatedArticles.length > 4 " :to="localePath('/categories')" :class="btnStyle">
+                        <NuxtLink v-if="relatedArticles.length > 1 " :to="localePath(`/categories/relatedPosts/${post.data.slug}`)" :class="btnStyle">
                             {{ $t('all categories') }}
                         </NuxtLink>
                     </div>
                 </div>
             </div>
-            <div class="mt-12 w-3/5">
+            <div class="mt-12 lg:w-4/5 xl:w-3/5">
                 <div class="mb-12 dark:text-white text-xl font-bold ">{{ locale == 'fa' ? 'پاسخ ها' : 'comments' }}</div>
                 <div class="my-8 dark:text-slate-800 dark:bg-white bg-slate-800 text-white shadow-md rounded-sm">
                     <div class="py-2 px-4 border-b-2 font-bold ">{{ locale == 'fa' ? 'دیدگاه خود را بنویسید' : 'write your comment' }}</div>
@@ -103,7 +103,6 @@ const likePost = useLikeStore()
 const localePath = useLocalePath()
 const {authUser} = useAuth()
 const relatedArticles = ref([])
-
 const isLiked = computed(() => likePost.getItem(authUser.value.id, route.params.slug))
 const articleLikes = computed(() => likePost.articleLikes(route.params.slug))
 
@@ -130,6 +129,12 @@ async function likeArticle() {
     }
 }
 
+async function getVisit() {
+    await useFetch(`${apiBase}/posts/getVisit`, {
+        params: {slug: route.params.slug}
+    })
+}
+getVisit()
 
 const {data: post} = await useFetch(`${apiBase}/posts/getPost`, {
     params: {slug: route.params.slug}
@@ -175,4 +180,13 @@ async function sendComment() {
         userComment.value = ''
     }
 }
+
+useHead({
+    title: locale.value == 'fa' ? post.value.data.persianTitle : post.value.data.englishTitle,
+    meta: [{
+        name: 'description',
+        content: locale.value == 'fa' ? post.value.data.persianBody : post.value.data.englishBody
+    }]
+})
+
 </script>

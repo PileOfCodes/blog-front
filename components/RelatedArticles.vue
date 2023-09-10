@@ -9,12 +9,12 @@
                 <div style="direction: ltr;"
                 class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 transition-all absolute top-[50%] left-[38%] translate-x-[-38%] translate-y-[-50%] dark:text-white">
                     <Icon size="28" name="solar:heart-bold" />
-                    <span>17</span>
+                    <span>{{ article.likes_count }}</span>
                 </div>
                 <div style="direction: ltr;"
                 class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 group-hover:transition-all duration-500 absolute top-[50%] left-[62%] translate-x-[-62%] translate-y-[-50%] dark:text-white">
                     <Icon size="28" name="uil:comment" />
-                    <span>24</span>
+                    <span>{{ article.comments_count }}</span>
                 </div>
                 <div class="rounded-sm hover:opacity-10 group-hover:opacity-100 group-hover:border-2 group-hover:border-slate-800 group-hover:dark:border-white  group-hover:duration-500 group-hover:transition-all overflow-hidden lg:w-[300px] md:h-[140px] md:rounded-md">
                     <UnLazyImage 

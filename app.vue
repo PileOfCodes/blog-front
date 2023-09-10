@@ -17,6 +17,12 @@ const { finalizePendingLocaleChange } = useI18n()
 const onBeforeEnter = async () => {
   await finalizePendingLocaleChange()
 }
+
+useHead({
+  titleTemplate: (title) => {
+    return title ? ` ${title} | وبلاگ مجموعه مقالات توسعه وب ` : ' وبلاگ مجموعه مقالات توسعه وب '
+  }
+})
 </script>
 
 <style lang="postcss">
