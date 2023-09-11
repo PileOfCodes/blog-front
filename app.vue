@@ -1,6 +1,7 @@
 <template>
   <div>
     <NuxtLayout >
+      <VitePwaManifest />
       <NuxtLoadingIndicator />
       <NuxtPage :transition="{
       name: 'my',

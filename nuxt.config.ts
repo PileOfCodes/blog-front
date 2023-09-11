@@ -14,8 +14,51 @@ export default defineNuxtConfig({
     "nuxt-lodash",
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    'nuxt-swiper'
+    'nuxt-swiper',
+    '@vite-pwa/nuxt'
   ],
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'PWA Blog',
+      short_name: 'PWA Blog',
+      description: 'pwa blog for web developers',
+      theme_color: '#00DC82',
+      background_color: '#ffffff',
+      icons: [
+        {
+          src: 'blog-64x64.png',
+          sizes: '64x64',
+          type: 'image/png',
+        },
+        {
+          src: 'blog-144x144.png',
+          sizes: '144x144',
+          type: 'image/png',
+        },
+        {
+          src: 'blog-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: 'blog-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        }
+      ],
+    },
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
+      type: 'module'
+    },
+  },
   build: {
     transpile: ['vue-toastification']
   },

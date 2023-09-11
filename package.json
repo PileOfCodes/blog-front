@@ -16,6 +16,7 @@
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@types/node": "^18.17.0",
     "@unlazy/nuxt": "^0.9.2",
+    "@vite-pwa/nuxt": "^0.1.1",
     "daisyui": "^3.5.1",
     "nuxt": "^3.6.5",
     "nuxt-icon": "^0.4.2",
