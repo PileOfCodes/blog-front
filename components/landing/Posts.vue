@@ -1,6 +1,6 @@
 <template>
     <div v-for="(post, index) in posts" :style="[locale == 'fa' ? 'direction: rtl; font-family: irsMedium' : 'direction: ltr;font-family: sans-serif']"
-    :key="index" class="flex flex-col items-center gap-y-12 sm:flex sm:justify-center sm:flex-row sm:flex-wrap md:justify-center md:gap-2 xl:flex xl:flex-wrap xl:justify-center xl:mb-2">
+    :key="index" class="flex flex-col items-center gap-y-12 sm:flex sm:justify-center sm:flex-row sm:flex-wrap md:justify-center md:gap-2 xl:flex xl:flex-wrap xl:gap-x-2 xl:mb-2">
         <div v-for="article in post" :key="article.id" class="group">
             <NuxtLink :to="localePath(`/posts/${article.slug}`)" class="relative" :style="[locale == 'fa' ? 'font-family: irsMedium' : 'font-family: sans-serif']">
                 <div :style="[locale == 'fa' ? 'direction:rtl' : 'direction:ltr']" class="text-slate-800 dark:text-white  font-bold transition-all duration-300">
@@ -17,7 +17,7 @@
                         <Icon size="28" name="uil:comment" />
                         <span>{{ article.comments_count }}</span>
                 </div>
-                <div class="rounded-sm hover:opacity-10 group-hover:opacity-100 group-hover:border-2 group-hover:border-slate-800 group-hover:dark:border-white group-hover:duration-500 group-hover:transition-all overflow-hidden w-[460px] h-[300px] sm:w-[600px] sm:h-[400px] md:w-[360px] md:h-[320px] xl:w-[555px] xl:h-[390px] ">
+                <div class="rounded-sm hover:opacity-10 group-hover:opacity-100 group-hover:border-2 group-hover:border-slate-800 group-hover:dark:border-white group-hover:duration-500 group-hover:transition-all overflow-hidden w-[460px] h-[300px] sm:w-[600px] sm:h-[400px] md:w-[360px] md:h-[320px] xl:w-[480px] xl:h-[340px] ">
                     <UnLazyImage 
                     :class="newestPostImageStyle"
                     :src="article.image" 
@@ -37,7 +37,7 @@
 <script setup>
 const {locale} = useI18n()
 const localePath = useLocalePath()
-const newestPostImageStyle = ref('animatedPostImage w-full hover:opacity-10 object-cover rounded-sm w-[460px] h-[300px] sm:w-[600px] sm:h-[400px] md:w-full xl:w-[555px] group-hover:scale-[120%] group-hover:transition-all group-hover:duration-500 group-hover:ease-in-out transition-all duration-500')
+const newestPostImageStyle = ref('animatedPostImage w-full hover:opacity-10 object-cover rounded-sm w-[460px] h-[300px] sm:w-[600px] sm:h-[400px] md:w-full xl:w-[480px] xl:h-[340px] group-hover:scale-[120%] group-hover:transition-all group-hover:duration-500 group-hover:ease-in-out transition-all duration-500')
 const {public: {apiBase}} = useRuntimeConfig()
 const posts = ref([])
 const page = ref(1)

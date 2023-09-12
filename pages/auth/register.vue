@@ -1,9 +1,12 @@
 <template>
     <div class="flex flex-col items-center">
-        <div class="dark:text-white my-12 font-bold text-[45px]">{{ locale == 'fa' ? 'فرم ثبت نام' : 'Register form' }}</div>
+        <div class="dark:text-white my-8 font-bold text-[45px]">{{ locale == 'fa' ? 'فرم ثبت نام' : 'Register form' }}</div>
+        <div v-for="error in errors">
+            <div class="text-red-600 mb-4 dark:bg-white px-4 py-2 rounded-full font-bold">{{ $t(`${error}`) }}</div>
+        </div>
         <div class="flex items-center justify-center ">
             <div class="w-[420px] p-4 bg-slate-800 dark:bg-white dark:text-slate-800 rounded-sm shadow-sm flex flex-col">
-                <input id="name" ref="nameInput" type="text" v-model="name" class="border-2 font-bold text-lg my-2 px-2 outline-0 focus:ring-2 ring-green-400 rounded-sm py-3 dark:border-gray-400 " :placeholder="locale == 'fa' ? 'نام کاربری' : 'username'">
+                <input id="name" ref="nameInput" type="text" v-model.number="name" class="border-2 font-bold text-lg my-2 px-2 outline-0 focus:ring-2 ring-green-400 rounded-sm py-3 dark:border-gray-400 " :placeholder="locale == 'fa' ? 'نام کاربری' : 'username'">
                 <input id="email" type="text" v-model="email" class="border-2 font-bold text-lg my-2 px-2 outline-0 focus:ring-2 ring-green-400 rounded-sm py-3 dark:border-gray-400 " :placeholder="locale == 'fa' ? 'ایمیل' : 'email'">
                 <div class="relative">
                     <input id="password" :type="type" v-model="password" class="border-2 font-bold w-full text-lg my-2 px-2 outline-0 focus:ring-2 ring-green-400 rounded-sm py-3 dark:border-gray-400 " :placeholder="locale == 'fa' ? 'گذر واژه' : 'password'">
@@ -19,6 +22,7 @@
                 </div>
             </div>
         </div>
+        <NuxtLink :to="localePath('/auth/login')" class="mt-8 p-2 transition-all saturate-150 hover:font-bold border-2 hover:bg-slate-800 hover:text-white dark:text-white hover:dark:bg-white hover:dark:text-slate-800 border-slate-800 dark:border-white ">{{ locale == 'fa' ? ' از قبل حساب دارم' : ' already have an account ' }}</NuxtLink>
     </div>
 </template>
 
@@ -38,6 +42,7 @@ const email = ref('')
 const password = ref('')
 const c_password = ref('')
 const nameInput = ref(null)
+const errors = ref(null)
 const {authUser} = useAuth()
 
 function changeType(){
@@ -63,24 +68,18 @@ async function sendForm() {
         }
         const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         if(!emailPattern.test(email.value)) {
-            toast.warning(locale == 'fa' ? 'ایمیل معتبر نیست' : 'email is not valid')
+            toast.warning(locale.value == 'fa' ? 'ایمیل معتبر نیست' : 'email is not valid')
             return
         }
 
         const namePattern = /^[a-zA-Z0-9]+$/
         if(!namePattern.test(name.value)) {
-            toast.warning(locale == 'fa' ? 'نام کاربری معتبر نیست' : 'username is not valid')
-            return
-        }
-
-        const passPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/
-        if(!passPattern.test(password.value)) {
-            toast.warning(locale == 'fa' ? ' پسورد معتبر نیست' : 'password is not valid')
+            toast.warning(locale.value == 'fa' ? 'نام کاربری معتبر نیست' : 'username is not valid')
             return
         }
 
         if(password.value !== c_password.value) {
-            toast.warning(locale == 'fa' ? ' تایید پسورد درست نمی باشد ' : 'confirm password is wrong')
+            toast.warning(locale.value == 'fa' ? ' تایید پسورد درست نمی باشد ' : 'confirm password is wrong')
             return
         }
 
@@ -94,9 +93,13 @@ async function sendForm() {
                 c_password: c_password.value
             }
         })
-        authUser.value = data
-        toast.success('user registered successfully')
-        return navigateTo(localePath('/'))
+        if(data.status == 200) {
+            authUser.value = data
+            toast.success('user registered successfully')
+            return navigateTo(localePath('/'))
+        }else {
+            errors.value = Object.values(data.message).flat()
+        }
     } catch (error) {
 
     }finally {

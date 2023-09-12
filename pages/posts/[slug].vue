@@ -31,7 +31,7 @@
                                     <span class="text-2xl">|</span>
                                     <div class="tooltip" :data-tip="locale == 'fa' ? 'پاسخ ها' : 'comment'">
                                         <Icon size="28" name="uil:comment" />
-                                        <span :style="[locale == 'fa' ? 'font-family: IrsMedium' : 'font-family: sans-serif']">{{ allComments.data.length }}</span>
+                                        <span :style="[locale == 'fa' ? 'font-family: IrsMedium' : 'font-family: sans-serif']">{{ post.data.comments_count }}</span>
                                     </div>
                                 </div>
                             </ClientOnly>
@@ -141,10 +141,6 @@ const {data: post} = await useFetch(`${apiBase}/posts/getPost`, {
 })
 
 const {data: comments} = await useFetch(`${apiBase}/comment/articleComments`, {
-    params: {slug: route.params.slug}
-})
-
-const {data: allComments} = await useFetch(`${apiBase}/comment/articleAllComments`, {
     params: {slug: route.params.slug}
 })
 

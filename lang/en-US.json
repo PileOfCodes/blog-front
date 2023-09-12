@@ -36,6 +36,10 @@
     "save" : "save",
     "name" : "username",
     "email" : " email ",
-    "password" : " password  "
+    "password" : " password  ",
+    "The email has already been taken." : "The email has already been taken",
+    "The name field must be a string." : "The name field must be a string",
+    "The password field must be at least 8 characters." : "The password field must be at least 8 characters",
+    "The email field must be a valid email address." : "The email field must be a valid email address"
 
 }

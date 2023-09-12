@@ -37,5 +37,9 @@
     "save" : " ذخیره ",
     "name" : " نام کاربری ",
     "email" : " ایمیل ",
-    "password" : " گذر واژه "
+    "password" : " گذر واژه ",
+    "The email has already been taken." : " ایمیل از قبل انتخاب شده ",
+    "The password field must be at least 8 characters." : " پسورد باید لااقل 8 کاراکتر باشد ",
+    "The email field must be a valid email address." : " ایمیل یا نام کاربری صحیح نمی باشد ",
+    "The name field must be a string." : " فیلد باید حاوی کاراکترهای رشته ای باشد "
 }

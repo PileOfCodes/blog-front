@@ -1,26 +1,26 @@
 <template>
     <div>
         <FilterSection @send-search-item="(input) => searchItem = input" />
-        <div class="mt-20 px-8 flex items-center justify-center xl:justify-between xl:gap-y-10 gap-12 flex-wrap min-h-[180px]">
+        <div class="mt-20 px-8 flex items-center justify-center xl:gap-x-10 xl:gap-y-10 flex-wrap min-h-[200px]">
             <div v-for="post in posts" :key="post.id" class="group">
                 <NuxtLink :to="localePath(`/posts/${post.slug}`)" class="relative" :style="[locale == 'fa' ? 'font-family: irsMedium' : 'font-family: sans-serif']">
-                    <div class="flex items-center justify-between text-slate-800 dark:text-white xl:text-sm font-bold xl:mt-2 transition-all duration-300">
-                        <div class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 transition-all absolute bottom-[10%] right-2 xl:truncate xl:w-[200px]">{{ locale == 'fa' ? post.persianTitle : post.englishTitle}}</div>
-                        <div class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 transition-all absolute bottom-[10%] left-2 dark:text-slate-400 text-slate-600">{{ locale == 'fa' ? post.persianDate : post.englishDate }}</div>
+                    <div :style="[locale == 'fa' ? 'direction:rtl' : 'direction:ltr']" class="text-slate-800 dark:text-white  font-bold transition-all duration-300">
+                        <div :class="[locale == 'fa' ? 'absolute bottom-[10%] sm:bottom-[5%] right-2 ' : 'absolute bottom-[10%] sm:bottom-[5%] left-2 ']" class="opacity-0 text-sm w-[240px] lg:text-sm lg:w-[240px] xl:w-[300px] md:text-xs md:w-[100px] truncate group-hover:opacity-100 font-bold group-hover:duration-500 transition-all sm:truncate">{{ locale == 'fa' ? post.persianTitle : post.englishTitle}}</div>
+                        <div :class="[locale == 'fa' ? 'absolute bottom-[10%] left-2 sm:bottom-[5%] sm:left-2' : 'absolute bottom-[10%] sm:bottom-[5%] right-2']" class="opacity-0 text-sm sm:text-xs group-hover:opacity-100 font-bold group-hover:duration-500 transition-all dark:text-slate-400 text-slate-600">{{ locale == 'fa' ? post.persianDate : post.englishDate }}</div>
                     </div>
                     <div style="direction: ltr;"
                         class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 transition-all absolute top-[50%] left-[38%] translate-x-[-38%] translate-y-[-50%] dark:text-white">
                             <Icon size="28" name="solar:heart-bold" />
-                            <span>17</span>
+                            <span>{{ post.likes_count }}</span>
                     </div>
                     <div style="direction: ltr;"
                         class="opacity-0 group-hover:opacity-100 font-bold group-hover:duration-500 transition-all absolute top-[50%] left-[62%] translate-x-[-62%] translate-y-[-50%] dark:text-white">
                         <Icon size="28" name="uil:comment" />
-                            <span>24</span>
+                            <span>{{ post.comments_count }}</span>
                     </div>
                     <div class="rounded-sm hover:opacity-10 w-full h-full group-hover:opacity-100 group-hover:border-2 group-hover:border-slate-800 group-hover:dark:border-white group-hover:duration-500 group-hover:transition-all overflow-hidden ">
                     <UnLazyImage 
-                        class="group-hover:opacity-10 xl:w-[690px] xl:h-[400px] sm:w-[540px] md:w-[480px] lg:w-[520px] w-[500px] h-[300px] object-cover hover:scale-[120%] duration-500 transition-all"
+                        class="group-hover:opacity-10 xl:w-[620px] xl:h-[400px] sm:w-[540px] md:w-[480px] lg:w-[520px] w-[500px] h-[300px] object-cover hover:scale-[120%] duration-500 transition-all"
                         :src="post.image" 
                         blurhash="LEHV6nWB2yk8pyo0adR*.7kCMdnj" 
                         auto-sizes 
@@ -29,8 +29,8 @@
                 </NuxtLink>
             </div>
         </div>
-        <div v-if="notFound" class="text-slate-800 dark:text-white font-bold text-2xl text-center ">{{ locale == 'fa' ? ' موردی یافت نشد ' : 'Not found anything' }}</div>
         <ObserveArticles v-if="enableObserver"  @intersect="getPosts" />
+        <div v-if="notFound" class="text-slate-800 dark:text-white font-bold text-2xl text-center ">{{ locale == 'fa' ? ' موردی یافت نشد ' : 'Not found anything' }}</div>
         <div class="flex items-center justify-center mt-8">
             <span v-if="pending" class="loading loading-dots loading-lg dark:text-white"></span>
         </div>

@@ -1,5 +1,5 @@
 <template>
-    <div ref="root"></div>
+    <div ref="root" class="mt-20"></div>
 </template>
 
 <script setup lang="ts">
